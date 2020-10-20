@@ -1,12 +1,36 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+
+import MapView from 'react-native-maps';
+
+// 4201738803816157
 
 export default function App() {
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const [region, setRegion] = useState({
+    longitude: -122,
+    latitude: 32,
+    longitudeDelta: 0.04,
+    latitudeDelta: 0.09,
+  });
+
+  useEffect(() => setMapLoaded(true), []);
+
+  if (!mapLoaded) {
+    return (
+      <View style={styles.loadingContainer}>
+        <StatusBar style="auto" />
+        <ActivityIndicator size="large" />
+        <Text style={{ fontSize: 32 }}>Loading...</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to working on your app!</Text>
       <StatusBar style="auto" />
+      <MapView region={region} style={styles.mapView} />
     </View>
   );
 }
@@ -14,8 +38,14 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  mapView: {
+    flex: 1,
   },
 });
